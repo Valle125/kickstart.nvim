@@ -179,6 +179,11 @@ vim.keymap.set('n', '<leader>y', '"+y')
 vim.keymap.set('v', '<leader>y', '"+y')
 vim.keymap.set('n', '<leader>Y', '"+Y')
 
+vim.keymap.set('n', '<C-d>', '<C-d>zz', { desc = 'move page down and center cursor' })
+vim.keymap.set('n', '<C-u>', '<C-u>zz', { desc = 'move page up and center cursor' })
+vim.keymap.set('n', 'n', 'nzzzv')
+vim.keymap.set('n', 'N', 'Nzzzv')
+
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
 -- is not what someone will guess without a bit more experience.
