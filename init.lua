@@ -125,7 +125,7 @@ vim.opt.scrolloff = 8
 
 vim.opt.updatetime = 50
 
-vim.opt.colorcolumn = '80'
+vim.opt.colorcolumn = '100'
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -935,7 +935,7 @@ require('lazy').setup({
         -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
         --  If you are experiencing weird indenting issues, add the language to
         --  the list of additional_vim_regex_highlighting and disabled languages for indent.
-        additional_vim_regex_highlighting = { 'ruby' },
+        additional_vim_regex_highlighting = false,
       },
       indent = { enable = true, disable = { 'ruby' } },
     },
@@ -950,6 +950,12 @@ require('lazy').setup({
     'ThePrimeagen/harpoon',
     branch = 'harpoon2',
     dependencies = { 'nvim-lua/plenary.nvim' },
+  },
+  {
+    'lewis6991/spellsitter.nvim',
+    config = function()
+      require('spellsitter').setup()
+    end,
   },
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
@@ -1000,16 +1006,22 @@ end, { desc = '[A]dd file to Harpoon' })
 
 vim.keymap.set('n', '<leader>1', function()
   harpoon:list():select(1)
-end)
+end, { desc = 'Harpoon Select File 1' })
 vim.keymap.set('n', '<leader>2', function()
   harpoon:list():select(2)
-end)
+end, { desc = 'Harpoon Select File 2' })
 vim.keymap.set('n', '<leader>3', function()
   harpoon:list():select(3)
-end)
+end, { desc = 'Harpoon Select File 3' })
 vim.keymap.set('n', '<leader>4', function()
   harpoon:list():select(4)
-end)
+end, { desc = 'Harpoon Select File 4' })
+vim.keymap.set('n', '<leader>5', function()
+  harpoon:list():select(5)
+end, { desc = 'Harpoon Select File 5' })
+vim.keymap.set('n', '<leader>6', function()
+  harpoon:list():select(6)
+end, { desc = 'Harpoon Select File 6' })
 
 -- Toggle previous & next buffers stored within Harpoon list
 vim.keymap.set('n', '<C-p>', function()
