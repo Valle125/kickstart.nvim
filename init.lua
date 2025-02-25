@@ -955,6 +955,9 @@ require('lazy').setup({
   {
     'ThePrimeagen/vim-be-good',
   },
+  {
+    'gvvaughan/lyaml',
+  },
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
@@ -994,9 +997,18 @@ harpoon:setup {
   },
 }
 
-vim.keymap.set('n', '<leader>e', function()
-  harpoon.ui:toggle_quick_menu(harpoon:list())
-end, { desc = 'Harpoon toogle quick Menu' })
+local copy_file = function(src, dest)
+  local data = vim.fn.readfile(src, 'b')
+  vim.fn.writefile(data, dest, 'b')
+end
+
+local nvim_cfg_file = vim.loop.cwd() .. '/.nvim.yaml'
+vim.keymap.set('n', '<leader>cf', function()
+  if vim.fn.filereadable(nvim_cfg_file) == 0 then
+    local nvim_cfg = vim.fn.stdpath 'config'
+    copy_file(nvim_cfg .. '/templates/.nvim.yaml', nvim_cfg_file)
+  end
+end, { desc = 'Create a .nvim.yaml Project [C]onfiguration [F]ile' })
 
 vim.keymap.set('n', '<leader>a', function()
   harpoon:list():add()
@@ -1042,11 +1054,6 @@ vim.keymap.set('n', '<C-n>', function()
   harpoon:list():next()
 end, { desc = 'Harpoon [N]ext' })
 
-local copy_file = function(src, dest)
-  local data = vim.fn.readfile(src, 'b')
-  vim.fn.writefile(data, dest, 'b')
-end
-
 vim.keymap.set('n', '<leader>cc', function()
   local dir = vim.loop.cwd()
   local nvim_cfg = vim.fn.stdpath 'config'
@@ -1062,3 +1069,23 @@ vim.keymap.set('n', '<leader>cc', function()
   end
   vim.fn.system('cmake -S ' .. dir .. ' -G "Unix Makefiles" -B cmake')
 end, { desc = 'Create [c]ompile_[c]ommands.json' })
+
+-- Load .nvim.yaml project config file if present.
+local nvim_cfg = {}
+if vim.fn.filereadable(nvim_cfg_file) == 1 then
+  local data = vim.fn.join(vim.fn.readfile(nvim_cfg_file), '\n')
+  local lyaml = require 'lyaml'
+  nvim_cfg = lyaml.load(data)
+end
+
+local configure_clangd = function()
+  local cmd = { 'clangd' }
+  if nvim_cfg['clangd'] ~= nil and nvim_cfg['clangd']['query-driver'] ~= nil then
+    table.insert(cmd, '--query-driver=' .. nvim_cfg['clangd']['query-driver'])
+  end
+  require('lspconfig').clangd.setup {
+    cmd = cmd,
+    filetypes = { 'c', 'cpp' },
+  }
+end
+configure_clangd()
