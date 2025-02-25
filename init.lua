@@ -1041,3 +1041,24 @@ end, { desc = 'Harpoon [P]revious' })
 vim.keymap.set('n', '<C-n>', function()
   harpoon:list():next()
 end, { desc = 'Harpoon [N]ext' })
+
+local copy_file = function(src, dest)
+  local data = vim.fn.readfile(src, 'b')
+  vim.fn.writefile(data, dest, 'b')
+end
+
+vim.keymap.set('n', '<leader>cc', function()
+  local dir = vim.loop.cwd()
+  local nvim_cfg = vim.fn.stdpath 'config'
+
+  local clangd_file = dir .. '/.clangd'
+  if vim.fn.filereadable(clangd_file) == 0 then
+    copy_file(nvim_cfg .. '/lua/clangd/.clangd', clangd_file)
+  end
+
+  local cmake_file = dir .. '/CMakeLists.txt'
+  if vim.fn.filereadable(cmake_file) == 0 then
+    copy_file(nvim_cfg .. '/lua/clangd/CMakeLists.txt', cmake_file)
+  end
+  vim.fn.system('cmake -S ' .. dir .. ' -G "Unix Makefiles" -B cmake')
+end, { desc = 'Create [c]ompile_[c]ommands.json' })
