@@ -1062,3 +1062,14 @@ vim.keymap.set('n', '<leader>cc', function()
   end
   vim.fn.system('cmake -S ' .. dir .. ' -G "Unix Makefiles" -B cmake')
 end, { desc = 'Create [c]ompile_[c]ommands.json' })
+
+-- Goto next error or warning, if there are no errors.
+vim.keymap.set('n', 'ge', function()
+  local err_severity = vim.diagnostic.severity.ERROR
+  local errors = vim.diagnostic.count(0)[err_severity]
+  local opt = {}
+  if errors ~= nil and errors > 0 then
+    opt['severity'] = err_severity
+  end
+  vim.diagnostic.goto_next(opt)
+end, { desc = '[G]oto next [E]rror' })
