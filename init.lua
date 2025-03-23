@@ -1063,7 +1063,7 @@ vim.keymap.set('n', '<leader>cc', function()
   if vim.fn.filereadable(cmake_file) == 0 then
     copy_file(nvim_cfg .. '/lua/clangd/CMakeLists.txt', cmake_file)
   end
-  vim.fn.system('cmake -S ' .. dir .. ' -G "Unix Makefiles" -B cmake')
+  vim.fn.system('cmake -S ' .. dir .. ' -G "Unix Makefiles" -B build')
 end, { desc = 'Create [c]ompile_[c]ommands.json' })
 
 -- Goto next error or warning, if there are no errors.
