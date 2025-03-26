@@ -444,6 +444,20 @@ require('lazy').setup({
         }
       end, { desc = '[S]earch [/] in Open Files' })
 
+      vim.keymap.set('n', '<leader>sa', function()
+        builtin.live_grep {
+          cwd = vim.loop.os_homedir() .. '/src',
+          prompt_title = 'Live Grep all Projects',
+        }
+      end, { desc = '[S]earch [A]ll Projects' })
+
+      vim.keymap.set('n', '<leader>st', function()
+        builtin.live_grep {
+          cwd = vim.fn.stdpath 'config' .. '/c_templates',
+          prompt_title = 'Live Grep C-Templates',
+        }
+      end, { desc = '[S]earch [T]emplates' })
+
       -- Shortcut for searching your Neovim configuration files
       vim.keymap.set('n', '<leader>sn', function()
         builtin.find_files { cwd = vim.fn.stdpath 'config' }
