@@ -220,6 +220,66 @@ ls.add_snippets('c', {
       }
     )
   ),
+  s(
+    'thread',
+    fmta(
+      [[
+        CCI_OS_THREAD_ATTR_DEF(<thread_id>, <prio>, <stack_size>, <attr_bits>);
+        static osThreadId_t <thread_id>;
+        static void <thread_id>_fun(void *arg){
+            UNUSED(arg);
+
+            while(1) {
+            }
+        }
+        <thread_id> = osThreadNew(<thread_id>_fun, NULL, &<thread_id>_attr);
+        if (<thread_id> == NULL)
+            return <error_handler>;
+      ]],
+      {
+        thread_id = i(1, 'thread'),
+        prio = c(2, {
+          t 'osPriorityNormal',
+          t 'osPriorityAboveNormal',
+          t 'osPriorityHigh',
+          t 'osPriorityRealtime',
+          t 'osPriorityLow',
+          t 'osPriorityBelowNormal',
+          t 'osPriorityIdle',
+        }),
+        stack_size = i(3, '800'),
+        attr_bits = i(4, '0'),
+        error_handler = i(5, 'CCI_ERR_FAILED'),
+      },
+      {
+        repeat_duplicates = true,
+      }
+    )
+  ),
+  s(
+    'mutex',
+    fmta(
+      [[
+        CCI_OS_MUTEX_ATTR_DEF(<mutex_id>, <attr_bits>);
+        static osMutexId_t <mutex_id>;
+        <mutex_id> = osMutexNew(&<mutex_id>_attr);
+        if (<mutex_id> == NULL)
+            return <error_handler>;
+      ]],
+      {
+        mutex_id = i(1, 'mutex'),
+        attr_bits = c(2, {
+          t 'osMutexPrioInherit | osMutexRecursive',
+          t 'osMutexPrioInherit',
+          t '0',
+        }),
+        error_handler = i(3, 'CCI_ERR_FAILED'),
+      },
+      {
+        repeat_duplicates = true,
+      }
+    )
+  ),
 }, {
   key = 'c',
 })
